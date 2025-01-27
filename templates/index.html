@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Recorder</title>
+</head>
+<body>
+    <table style="width:100%">
+        <tr>
+            <td style="width:50%">
+                <h2>Record and Upload Audio</h2>
+
+                <!-- Audio Recorder Controls -->
+                <button id="record">Record</button>
+                <button id="stop">Stop</button>
+                <span id="timer">00:00</span>
+                <audio id="audio" controls></audio>
+                
+                <!-- Form to Upload Recorded Audio -->
+                <form id="uploadForm" method="POST" action="/upload_audio" enctype="multipart/form-data">
+                    <input type="hidden" name="audio_data" id="audioData">
+                    <button type="submit">Upload Audio</button>
+                </form>
+
+                <script src="script.js"></script>
+                <hr>
+
+                <!-- Display Recorded Files -->
+                <h2>Recorded Files</h2>
+                <ul>
+                    {% for file in audio_files %}
+                    <li> 
+                        <audio controls>
+                            <source src="{{ url_for('uploaded_file', filename=file) }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <br>
+                        {{ file }}
+                        <a href="uploads/{{ file }}.txt" download>{{ file }}.txt</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td style="width:50%">
+                <h2>Type in Your Text to Generate Audio</h2>
+
+                <!-- Form to Upload Text for TTS -->
+                <form action="/upload_text" method="post">
+                    <textarea name="text" rows="10" cols="50" placeholder="Type your text here..."></textarea>
+                    <br>
+                    <input type="submit" value="Generate Audio">
+                </form>
+                <hr>
+
+                <!-- Display Generated TTS Files -->
+                <h2>Generated TTS Files</h2>
+                <ul>
+                    {% for tts_file in tts_files %}
+                    <li>
+                        <audio controls>
+                            <source src="{{ url_for('uploaded_file', filename=tts_file) }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <br>
+                        {{ tts_file }}
+                        <a href="uploads/{{ tts_file }}.txt" download>{{ tts_file }}.txt</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
